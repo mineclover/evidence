@@ -2,11 +2,11 @@
 
 Implement `IEvidenceAdapter.analyze(snapshot)` to translate source snapshots into serializable graph data. The adapter owns declaration classification, public visibility, structural ownership, export resolution, documentation attachment, and unsupported-construct detection. A successful syntax parse alone does not establish a complete Evidence Graph inventory.
 
-This guide gives implementation-level inventories for Markdown, TypeScript, JavaScript, Python, Go, Rust, Java, C#, C, C++, Ruby, and Prisma. The root README's [Languages](../../../../README.md#languages) section is the authoritative current boundary for all 28 supported artifact types, including the adapters whose implementation chapters have not yet been expanded here:
+This guide gives implementation-level inventories for Markdown, TypeScript, JavaScript, Python, Go, Rust, Java, C#, C, C++, Ruby, and Prisma. The root README's [Languages](../../../../README.md#languages) section is the authoritative current boundary for all 29 supported artifact types, including the adapters whose implementation chapters have not yet been expanded here:
 
 | Family | Authoritative coverage supplied by the root README |
 | --- | --- |
-| Programming | Kotlin, Swift, PHP, Dart, Scala, Lua, Objective-C, Zig, and MATLAB |
+| Programming | Kotlin, Swift, PHP, Dart, Scala, Lua, Objective-C, Zig, MATLAB, and TypeSpec |
 | Database | Portable SQL, PostgreSQL, MySQL, SQLite, BigQuery, and DBML |
 | Document/API | Swagger/OpenAPI, plus the Markdown summary used by public configuration |
 

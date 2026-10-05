@@ -382,7 +382,7 @@ The resolver never falls back to a project-wide name.
 
 Every family can be a claim and a reference and can cite every other.
 
-Programming languages and SQL dialects parse through upstream Tree-sitter grammars, Prisma through its own parser, and Swagger as JSON or YAML. Adapters run no compiler, preprocessor, macro, or build; a construct that could change the public surface and cannot be resolved makes analysis incomplete.
+Programming languages and SQL dialects parse through upstream Tree-sitter grammars, TypeSpec and Prisma through their own parsers, and Swagger as JSON or YAML. Adapters run no compiler, preprocessor, macro, or build; a construct that could change the public surface and cannot be resolved makes analysis incomplete.
 
 Tree-sitter extraction failures report the checker's grammar or adapter boundary, not a verdict that the source violates its language's syntax. Incomplete extraction cannot certify coverage because it may have missed declarations.
 
@@ -413,6 +413,7 @@ Static foreign re-exports contribute no locally owned declarations and need no d
 | `matlab` | `.m` | `classdef` types, primary functions, public members, `@Class` folders | Percent help |
 | `objc` | `.m`, `.h` | Interfaces, protocols, categories, methods, properties, `@public` ivars | Doxygen, `///`, `//!` |
 | `zig` | `.zig` | `pub` declarations, exposed container fields, direct aliases | Adjacent `///` |
+| `typespec` | `.tsp` | Models, interfaces, scalars, enums, unions, aliases, operations, and their named members | Attached JSDoc or `@evidence` decorators |
 
 Every adapter maps its language onto `type`, `function`, and `property`, keeps undocumented public declarations in the population, and ignores tags inside code examples, strings, and ordinary comments.
 
@@ -438,6 +439,7 @@ Every adapter maps its language onto `type`, `function`, and `property`, keeps u
 - **MATLAB.** `+pkg/@Widget/Widget.m#pkg.Widget.run`; percent help after signatures or before members. `eval`, `dynamicprops`, and missing class folders are incomplete.
 - **Objective-C.** `Widget["-send:to:"]`, `["Widget(Extras)"]["-extra"]`, `["protocol(Widget)"]["-run"]`; configure `type: "objc"` explicitly. Non-guard preprocessing and Objective-C++ are incomplete.
 - **Zig.** `contract.zig#Contract.run`; quoted identifiers are literal segments. Literal named-package imports forward foreign owners without enrolling dependency declarations. Local `usingnamespace`, comptime namespaces, and build options are incomplete.
+- **TypeSpec.** `main.tsp#Shop.Product.id`, or `main.tsp#Product.id` without the namespace. Namespaces own no unit; spreads and `is`/`extends` copies add no members. `@evidence("target", "reason")`, `@evidenceReview`, and `@evidenceExclude` decorators are equivalent to the JSDoc tags, and the `internal` modifier withdraws a declaration. Evidence decorators applied through `@@` augment decorators are unsupported hosts. Templates are not instantiated.
 
 </details>
 

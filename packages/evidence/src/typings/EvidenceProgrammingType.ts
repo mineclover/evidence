@@ -24,5 +24,6 @@ export type EvidenceProgrammingType =
   | "rust"
   | "scala"
   | "swift"
+  | "typespec"
   | "typescript"
   | "zig";

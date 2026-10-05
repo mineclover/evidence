@@ -32,4 +32,5 @@ export * from "./sqlite/EvidenceSqliteAdapter";
 export * from "./swagger/EvidenceSwaggerAdapter";
 export * from "./swift/EvidenceSwiftAdapter";
 export * from "./typescript/EvidenceTypeScriptAdapter";
+export * from "./typespec/EvidenceTypeSpecAdapter";
 export * from "./zig/EvidenceZigAdapter";

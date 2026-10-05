@@ -460,6 +460,32 @@ export namespace EvidenceLanguageRegistry {
       },
     },
     {
+      type: "typespec",
+      name: "TypeSpec",
+      grammars: [
+        {
+          id: "typespec",
+          extensions: [".tsp"],
+          filenames: [],
+        },
+      ],
+      adapter: {
+        entry: "EvidenceTypeSpecAdapter",
+        symbols: ["type", "function", "property"],
+        publicSurface:
+          "TypeSpec models, interfaces, scalars, enums, unions, aliases, and operations, with model properties, enum members, named union variants, and interface operations; namespaces qualify names but own no unit.",
+        addressing:
+          "File-qualified declaration segments, namespace-qualified or bare (Namespace.Model or Model, Model.property).",
+        comments: [
+          "attached JSDoc /** */ and @evidence / @evidenceReview / @evidenceExclude decorators",
+        ],
+        unsupported: [
+          "Evidence decorators applied through augment decorators (@@)",
+          "template instantiation and spread expansion",
+        ],
+      },
+    },
+    {
       type: "javascript",
       name: "JavaScript",
       grammars: [

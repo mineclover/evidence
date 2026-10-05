@@ -26,6 +26,7 @@ import type {
 import { dedent } from "@typia/utils";
 
 import { EvidenceLuaCertificationFixture } from "./EvidenceLuaCertificationFixture";
+import { EvidenceTypeSpecCertificationFixture } from "./EvidenceTypeSpecCertificationFixture";
 import type { IEvidenceAdapterCertification } from "./IEvidenceAdapterCertification";
 import type { IEvidenceAdapterCertificationAddress } from "./IEvidenceAdapterCertificationAddress";
 import type { IEvidenceAdapterCertificationRequirement } from "./IEvidenceAdapterCertificationRequirement";
@@ -57,6 +58,7 @@ export namespace EvidenceAdapterCertificationFixtures {
       c(),
       cpp(),
       ruby(),
+      EvidenceTypeSpecCertificationFixture.create(),
     ];
   }
 
