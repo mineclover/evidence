@@ -439,7 +439,7 @@ Every adapter maps its language onto `type`, `function`, and `property`, keeps u
 - **MATLAB.** `+pkg/@Widget/Widget.m#pkg.Widget.run`; percent help after signatures or before members. `eval`, `dynamicprops`, and missing class folders are incomplete.
 - **Objective-C.** `Widget["-send:to:"]`, `["Widget(Extras)"]["-extra"]`, `["protocol(Widget)"]["-run"]`; configure `type: "objc"` explicitly. Non-guard preprocessing and Objective-C++ are incomplete.
 - **Zig.** `contract.zig#Contract.run`; quoted identifiers are literal segments. Literal named-package imports forward foreign owners without enrolling dependency declarations. Local `usingnamespace`, comptime namespaces, and build options are incomplete.
-- **TypeSpec.** `main.tsp#Shop.Product.id`, or `main.tsp#Product.id` without the namespace. Namespaces own no unit; spreads and `is`/`extends` copies add no members. `@evidence("target", "reason")`, `@evidenceReview`, and `@evidenceExclude` decorators are equivalent to the JSDoc tags, and the `internal` modifier withdraws a declaration. Evidence decorators applied through `@@` augment decorators are unsupported hosts. Templates are not instantiated.
+- **TypeSpec.** `specs/main.tsp#Shop.Product.id`, or `specs/main.tsp#Product.id` without the namespace. Like Markdown, the path is relative to the reference root rather than the citing file, and `..` cannot leave that root. Namespaces own no unit; spreads and `is`/`extends` copies add no members. `@evidence("target", "reason")`, `@evidenceReview`, and `@evidenceExclude` decorators are equivalent to the JSDoc tags, and the `internal` modifier withdraws a declaration. Evidence decorators applied through `@@` augment decorators are unsupported hosts. Templates are not instantiated.
 
 </details>
 

@@ -7,6 +7,7 @@ import { EvidenceInventoryMerge } from "../internal/EvidenceInventoryMerge";
 import { EvidenceMarkdownTarget } from "../adapters/markdown/EvidenceMarkdownTarget";
 import { EvidencePrismaTarget } from "../adapters/prisma/EvidencePrismaTarget";
 import { EvidenceSwaggerTarget } from "../adapters/swagger/EvidenceSwaggerTarget";
+import { EvidenceTypeSpecTarget } from "../adapters/typespec/EvidenceTypeSpecTarget";
 import type { IEvidenceTargetCandidate } from "../internal/IEvidenceTargetCandidate";
 import type { IEvidenceAddress } from "../structures/IEvidenceAddress";
 import type { IEvidenceDiagnostic } from "../structures/IEvidenceDiagnostic";
@@ -101,6 +102,12 @@ export class EvidenceTargetResolver {
   private readonly markdownFiles = new Map<string, Set<string>>();
 
   /**
+   * Reference-root-relative TypeSpec paths mapped to their selected absolute
+   * spellings; TypeSpec targets resolve from the root like Markdown targets.
+   */
+  private readonly typeSpecFiles = new Map<string, Set<string>>();
+
+  /**
    * Builds lookup state for one reference's inventory snapshots.
    *
    * The optional type supplies a grammar only when selected unit IDs do not
@@ -133,27 +140,43 @@ export class EvidenceTargetResolver {
       }
       spellings.add(address.file);
     }
-    // Markdown references are rooted at selected source addresses. Identify their
-    // physical sources first so non-Markdown files cannot enter this path map.
-    const markdownSources = new Set(
+    // Markdown and TypeSpec references are rooted at selected source addresses.
+    // Identify their physical sources first so other files cannot enter these
+    // path maps.
+    this.collectRootedFiles(
+      "markdown",
+      this.markdownFiles,
+      EvidenceMarkdownTarget.normalize,
+    );
+    this.collectRootedFiles(
+      "typespec",
+      this.typeSpecFiles,
+      EvidenceTypeSpecTarget.normalize,
+    );
+  }
+
+  private collectRootedFiles(
+    type: EvidenceArtifactType,
+    output: Map<string, Set<string>>,
+    normalize: (file: string) => string,
+  ): void {
+    const sources = new Set(
       this.inventory.units
-        .filter((unit) => unit.type === "markdown")
+        .filter((unit) => unit.type === type)
         .flatMap((unit) =>
           unit.sites.map((site) => EvidenceFileTarget.normalize(site.file)),
         ),
     );
     for (const source of this.inventory.sources) {
-      if (
-        !markdownSources.has(EvidenceFileTarget.normalize(source.physicalPath))
-      )
+      if (!sources.has(EvidenceFileTarget.normalize(source.physicalPath)))
         continue;
       for (const address of source.addresses) {
         if (address.selected === false) continue;
-        const relative = EvidenceMarkdownTarget.normalize(address.relative);
-        let files = this.markdownFiles.get(relative);
+        const relative = normalize(address.relative);
+        let files = output.get(relative);
         if (files === undefined) {
           files = new Set<string>();
-          this.markdownFiles.set(relative, files);
+          output.set(relative, files);
         }
         files.add(address.absolute);
       }
@@ -216,6 +239,25 @@ export class EvidenceTargetResolver {
               "target-missing-file",
               `Markdown target file '${target.file}' is not among the selected reference files.`,
               "Correct the root-relative Markdown path or include that file in the reference.",
+            ),
+          );
+        }
+      } else if (type === "typespec") {
+        const target = EvidenceTypeSpecTarget.parse(statement.target);
+        for (const file of this.typeSpecFiles.get(target.file) ?? [])
+          addresses.push({ file, segments: target.segments });
+        if (addresses.length === 0) {
+          if (!this.inventory.complete) return this.incomplete(statement, []);
+          return this.failure(
+            "missing-file",
+            [],
+            [],
+            [],
+            this.diagnostic(
+              statement,
+              "target-missing-file",
+              `TypeSpec target file '${target.file}' is not among the selected reference files.`,
+              "Correct the root-relative TypeSpec path or include that file in the reference.",
             ),
           );
         }

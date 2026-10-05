@@ -9,6 +9,7 @@ import type { EvidenceDatabaseType } from "../typings/EvidenceDatabaseType";
 import type { EvidenceProgrammingType } from "../typings/EvidenceProgrammingType";
 import type { IEvidenceMaterializedReference } from "./IEvidenceMaterializedReference";
 import { EvidenceMarkdownTarget } from "../adapters/markdown/EvidenceMarkdownTarget";
+import { EvidenceTypeSpecTarget } from "../adapters/typespec/EvidenceTypeSpecTarget";
 
 /**
  * Chooses reference populations that can interpret an authored target.
@@ -86,6 +87,22 @@ function affinity(
       ),
     );
     return exact ? 3 : markdownLike(file) ? 2 : 1;
+  }
+  if (type === "typespec") {
+    let file: string;
+    try {
+      file = EvidenceTypeSpecTarget.parse(target).file;
+    } catch {
+      return 0;
+    }
+    const exact = reference.inventory.sources.some((source) =>
+      source.addresses.some(
+        (address) =>
+          address.selected !== false &&
+          EvidenceTypeSpecTarget.normalize(address.relative) === file,
+      ),
+    );
+    return exact ? 3 : recognizes(type, file) ? 2 : 0;
   }
 
   const parsed = parseFileTargets(target, host);

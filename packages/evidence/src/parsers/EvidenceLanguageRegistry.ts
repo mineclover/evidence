@@ -475,7 +475,7 @@ export namespace EvidenceLanguageRegistry {
         publicSurface:
           "TypeSpec models, interfaces, scalars, enums, unions, aliases, and operations, with model properties, enum members, named union variants, and interface operations; namespaces qualify names but own no unit.",
         addressing:
-          "File-qualified declaration segments, namespace-qualified or bare (Namespace.Model or Model, Model.property).",
+          "Reference-root-relative file plus declaration segments, namespace-qualified or bare (Namespace.Model or Model, Model.property).",
         comments: [
           "attached JSDoc /** */ and @evidence / @evidenceReview / @evidenceExclude decorators",
         ],
