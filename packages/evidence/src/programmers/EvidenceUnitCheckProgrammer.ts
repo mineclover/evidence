@@ -44,6 +44,7 @@ export namespace EvidenceUnitCheckProgrammer {
    * unresolved, ambiguous, and incomplete requests cannot silently pass.
    * Reference units select incoming coverage and claim units select outgoing
    * annotations and host policies. The supplied analysis remains unchanged.
+   * Context requests carry selected missing checklist IDs into diagnostics.
    *
    * @evidence contracts/common.md#principled-implementation Every target is inspected first; resolved targets select population subtrees (or single units when shallow), and claim units keep outgoing annotations while reference units keep incoming coverage.
    * @evidence contracts/common.md#clear-and-simple-design Check composes inspection, selection indexing and report summarizing.
@@ -57,6 +58,7 @@ export namespace EvidenceUnitCheckProgrammer {
     context: IEvidenceQueryContext,
     targets: readonly string[],
     shallow: boolean,
+    includeMissingIds: boolean = false,
   ): Promise<IEvidenceCheckReport> {
     if (targets.length === 0)
       throw new Error("Focused checks require at least one target.");
@@ -155,7 +157,12 @@ export namespace EvidenceUnitCheckProgrammer {
           [
             ...analysis.report.diagnostics.flatMap(
               (diagnostic: IEvidenceDiagnostic): IEvidenceDiagnostic[] =>
-                selectDiagnostic(analysis, selections, diagnostic),
+                selectDiagnostic(
+                  analysis,
+                  selections,
+                  diagnostic,
+                  includeMissingIds,
+                ),
             ),
             ...failures,
           ],
@@ -353,6 +360,7 @@ function selectDiagnostic(
   analysis: IEvidenceCheckAnalysis,
   selections: Map<string, IEvidenceUnitCheckSelection>,
   diagnostic: IEvidenceDiagnostic,
+  includeMissingIds: boolean,
 ): IEvidenceDiagnostic[] {
   if (diagnostic.claim === undefined) return [diagnostic];
   const own: IEvidenceUnitCheckSelection | undefined = selections.get(
@@ -412,6 +420,7 @@ function selectDiagnostic(
     return [
       {
         ...diagnostic,
+        ...(includeMissingIds ? { missingUnitIds: missing } : {}),
         message: `Claim ${diagnostic.claim + 1} reference ${(diagnostic.reference ?? 0) + 1}: Host '${host?.name ?? diagnostic.unitId ?? "unknown"}' has not acknowledged ${missing.length} selected checklist item(s): ${names.join(", ")}.`,
       },
     ];

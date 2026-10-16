@@ -1,5 +1,6 @@
 import type { EvidenceSeverity } from "../typings/EvidenceSeverity";
 import type { IEvidenceSourceLocation } from "./IEvidenceSourceLocation";
+import type { IEvidenceDiagnosticContext } from "./IEvidenceDiagnosticContext";
 
 /**
  * Actionable finding attributed to a source or configuration boundary.
@@ -95,4 +96,22 @@ export interface IEvidenceDiagnostic {
    * unit.
    */
   target?: string;
+
+  /**
+   * Missing reference identities for a checklist host diagnostic.
+   *
+   * Focused checks supply this list only when source context was requested and
+   * project it to their selected missing items.
+   */
+  missingUnitIds?: string[];
+
+  /**
+   * Captured Markdown sections explaining displayed missing obligations.
+   *
+   * Present only when context was requested and a complete source exists.
+   */
+  context?: IEvidenceDiagnosticContext[];
+
+  /** Missing sections withheld after the per-diagnostic context bound. */
+  omittedContext?: number;
 }

@@ -66,11 +66,26 @@ export interface IEvidenceCheckCommand {
   watch?: true;
 
   /**
-   * Maximum number of diagnostics to print.
+   * Includes captured Markdown sections for displayed missing obligations.
    *
-   * Omission prints all of them; counts always cover the whole analysis.
+   * Omission keeps the ordinary diagnostic output. Watch does not support it.
+   */
+  context?: true;
+
+  /**
+   * Maximum number of diagnostics per finite check page.
+   *
+   * Omission prints all of them unless a configured report limit applies;
+   * counts always cover the whole analysis.
    */
   limit?: number;
+
+  /**
+   * One-based finite diagnostic page under an effective limit.
+   *
+   * Omission requests page one when a limit is configured or supplied.
+   */
+  page?: number;
 
   /**
    * Maximum number of units whose diagnostics are printed.
